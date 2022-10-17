@@ -379,4 +379,21 @@ Basic syntaxis
       [7]=>
       string(1) "d"
       }
+      
+      
+  *iterables
+  Iterable is a pseudo-type introduced in PHP 7.1. It accepts any array or object implementing the Traversable interface.
+  Both of these types are iterable using foreach and can be used with yield from within a generator.
+      
+      Example #1 Iterable parameter type example
+      
+      <?php
+
+      function foo(iterable $iterable) {
+          foreach ($iterable as $value) {
+              // ...
+          } 
+      }
+
+      ?>
    
