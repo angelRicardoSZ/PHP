@@ -477,6 +477,302 @@ Basic syntaxis
   }
   ?>
   
+  --Functions arrays
+  
+  array_map
+  
+  Applies the callback to the elements of the given arrays
+  
+  Syntaxis
+  
+  array_map(?callable $callback, array $array, array ...$arrays): array
+  
+  array_map() returns an array containing the results of applying the callback to the corresponding value of array (and arrays if more    arrays are provided) used as       arguments for the callback.
+  The number of parameters that the callback function accepts should match the number of arrays passed to array_map().
+  Excess input arrays  are ignored. An ArgumentCountError is thrown if an insufficient number of arguments is provided.
+  
+  Parameters
+  
+  callback
+    A callable to run for each element in each array.
+
+    null can be passed as a value to callback to perform a zip operation on multiple arrays. If only array is provided, array_map() will     return the input array.
+  
+  array 
+    An array to run through the callback function.
+    
+   arrays
+    Supplementary variable list of array arguments to run through the callback function.
+    
+  Return Values
+    Returns an array containing the results of applying the callback function to the corresponding value of array (and arrays if more      arrays are provided) used as arguments for the callback.
+
+  The returned array will preserve the keys of the array argument if and only if exactly one array is passed. If more than one array is passed, the returned array will have sequential integer keys.
+  
+  Example
+  
+  Example #1 array_map() example
+  
+  Input
+  
+  <?php
+  function cube($n)
+  {
+      return ($n * $n * $n);
+  }
+
+  $a = [1, 2, 3, 4, 5];
+  $b = array_map('cube', $a);
+  print_r($b);
+  ?>
+  
+  Output
+  
+    Array
+  (
+      [0] => 1
+      [1] => 8
+      [2] => 27
+      [3] => 64
+      [4] => 125
+  )
+  
+  Example #2 array_map() using a lambda function
+  
+  Input:
+  
+  <?php
+  $func = function(int $value): int {
+      return $value * 2;
+  };
+
+  print_r(array_map($func, range(1, 5)));
+
+  // Or as of PHP 7.4.0:
+
+  print_r(array_map(fn($value): int => $value * 2, range(1, 5)));
+
+  ?>
+  
+  Output:
+  Array
+  (
+      [0] => 2
+      [1] => 4
+      [2] => 6
+      [3] => 8
+      [4] => 10
+  )
+  
+  Example #3 array_map() - using more arrays
+  
+  Input
+
+    <?php
+    function show_Spanish(int $n, string $m): string
+    {
+        return "The number {$n} is called {$m} in Spanish";
+    }
+
+    function map_Spanish(int $n, string $m): array
+    {
+        return [$n => $m];
+    }
+
+    $a = [1, 2, 3, 4, 5];
+    $b = ['uno', 'dos', 'tres', 'cuatro', 'cinco'];
+
+    $c = array_map('show_Spanish', $a, $b);
+    print_r($c);
+
+    $d = array_map('map_Spanish', $a , $b);
+    print_r($d);
+    ?>
+    
+   Output
+
+          // printout of $c
+      Array
+      (
+          [0] => The number 1 is called uno in Spanish
+          [1] => The number 2 is called dos in Spanish
+          [2] => The number 3 is called tres in Spanish
+          [3] => The number 4 is called cuatro in Spanish
+          [4] => The number 5 is called cinco in Spanish
+      )
+
+      // printout of $d
+      Array
+      (
+          [0] => Array
+              (
+                  [1] => uno
+              )
+
+          [1] => Array
+              (
+                  [2] => dos
+              )
+
+          [2] => Array
+              (
+                  [3] => tres
+              )
+
+          [3] => Array
+              (
+                  [4] => cuatro
+              )
+
+          [4] => Array
+              (
+                  [5] => cinco
+              )
+
+      )
+      
+  Usually when using two or more arrays, they should be of equal length because the callback function is applied in parallel to the corresponding elements.
+  If the arrays are of unequal length, shorter ones will be extended with empty elements to match the length of the longest.
+
+  An interesting use of this function is to construct an array of arrays, which can be easily performed by using null as the name of the callback function
+  
+  Example #4 Performing a zip operation of arrays
+  
+  Input
+  
+    <?php
+    $a = [1, 2, 3, 4, 5];
+    $b = ['one', 'two', 'three', 'four', 'five'];
+    $c = ['uno', 'dos', 'tres', 'cuatro', 'cinco'];
+
+    $d = array_map(null, $a, $b, $c);
+    print_r($d);
+    ?>
+   
+  Output
+  
+    Array
+      (
+          [0] => Array
+              (
+                  [0] => 1
+                  [1] => one
+                  [2] => uno
+              )
+
+          [1] => Array
+              (
+                  [0] => 2
+                  [1] => two
+                  [2] => dos
+              )
+
+          [2] => Array
+              (
+                  [0] => 3
+                  [1] => three
+                  [2] => tres
+              )
+
+          [3] => Array
+              (
+                  [0] => 4
+                  [1] => four
+                  [2] => cuatro
+              )
+
+          [4] => Array
+              (
+                  [0] => 5
+                  [1] => five
+                  [2] => cinco
+              )
+
+      )
+  
+  Example #6 array_map() - with string keys
+
+  Input
+  
+    <?php
+    $arr = ['stringkey' => 'value'];
+    function cb1($a) {
+        return [$a];
+    }
+    function cb2($a, $b) {
+        return [$a, $b];
+    }
+    var_dump(array_map('cb1', $arr));
+    var_dump(array_map('cb2', $arr, $arr));
+    var_dump(array_map(null,  $arr));
+    var_dump(array_map(null, $arr, $arr));
+    ?>
+  
+  Output
+  
+    array(1) {
+      ["stringkey"]=>
+      array(1) {
+        [0]=>
+        string(5) "value"
+      }
+    }
+    array(1) {
+      [0]=>
+      array(2) {
+        [0]=>
+        string(5) "value"
+        [1]=>
+        string(5) "value"
+      }
+    }
+    array(1) {
+      ["stringkey"]=>
+      string(5) "value"
+    }
+    array(1) {
+      [0]=>
+      array(2) {
+        [0]=>
+        string(5) "value"
+        [1]=>
+        string(5) "value"
+      }
+    }
+  
+  Example #7 array_map() - associative arrays
+  
+  While array_map() does not directly support using the array key as an input, that may be simulated using array_keys().
+  
+  Input
+  
+    <?php
+    $arr = [
+        'v1' => 'First release',
+        'v2' => 'Second release',
+        'v3' => 'Third release',
+    ];
+
+    // Note: Before 7.4.0, use the longer syntax for anonymous functions instead.
+    $callback = fn(string $k, string $v): string => "$k was the $v";
+
+    $result = array_map($callback, array_keys($arr), array_values($arr));
+
+    var_dump($result);
+    ?>
+  
+  Output
+  
+    array(3) {
+      [0]=>
+      string(24) "v1 was the First release"
+      [1]=>
+      string(25) "v2 was the Second release"
+      [2]=>
+      string(24) "v3 was the Third release"
+    }
+    
+  
   
       
   *iterables
