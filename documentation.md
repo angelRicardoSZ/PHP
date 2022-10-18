@@ -773,6 +773,69 @@ Basic syntaxis
     }
     
   
+   --array_merge
+   
+   Input
+   
+          <?php
+      $array = array (
+          'websites' => array (
+              'Search' => 'Google',
+              'Social' => 'Facebook',
+              'News' => 'NY Times' 
+          ),
+          'friends' => array (
+              'Chris',
+              'Jim',
+              'Lynn',
+              'Jeff',
+              'Joanna' 
+          ) 
+      );
+
+      $merged = array_merge ( $array ['websites'], $array ['friends'] );
+
+      print_r ( $merged );
+      ?>
+      
+    Output
+    
+            Array
+      (
+          [Search] => Google
+          [Social] => Facebook
+          [News] => NY Times
+          [0] => Chris
+          [1] => Jim
+          [2] => Lynn
+          [3] => Jeff
+          [4] => Joanna
+      )
+
+   
+   --array_keys
+   
+    Input
+   
+      <?php
+      $keys = array_keys ( $merged );
+      print_r ( $keys );
+      ?>
+
+    Output
+    
+          Array
+    (
+        [0] => Search
+        [1] => Social
+        [2] => News
+        [3] => 0
+        [4] => 1
+        [5] => 2
+        [6] => 3
+        [7] => 4
+    )
+    
   
       
   *iterables
