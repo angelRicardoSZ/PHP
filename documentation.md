@@ -248,7 +248,7 @@ Basic syntaxis
     
     
     
-    Arrays
+    *Arrays
     
     An array in PHP is actually an ordered map. A map is a type that associates values to keys. 
     This type is optimized for several different uses; it can be treated as an array, list (vector), hash table (an implementation of a map), dictionary, collection,       stack, queue, and probably more. As array values can be other arrays, trees and multidimensional arrays are also possible.
@@ -380,6 +380,104 @@ Basic syntaxis
       string(1) "d"
       }
       
+    Example #6 Complex Type Casting and Overwriting example
+
+      This example includes all variations of type casting of keys and overwriting of elements.
+
+      Input
+      
+        <?php
+        $array = array(
+            1    => 'a',
+            '1'  => 'b', // the value "a" will be overwritten by "b"
+            1.5  => 'c', // the value "b" will be overwritten by "c"
+            -1 => 'd',
+            '01'  => 'e', // as this is not an integer string it will NOT override the key for 1
+            '1.5' => 'f', // as this is not an integer string it will NOT override the key for 1
+            true => 'g', // the value "c" will be overwritten by "g"
+            false => 'h',
+            '' => 'i',
+            null => 'j', // the value "i" will be overwritten by "j"
+            'k', // value "k" is assigned the key 2. This is because the largest integer key before that was 1
+            2 => 'l', // the value "k" will be overwritten by "l"
+        );
+     
+        var_dump($array);
+        ?>
+    
+    Output
+    
+        array(7) {
+            [1]=>
+            string(1) "g"
+            [-1]=>
+            string(1) "d"
+            ["01"]=>
+            string(1) "e"
+            ["1.5"]=>
+            string(1) "f"
+            [0]=>
+            string(1) "h"
+            [""]=>
+            string(1) "j"
+            [2]=>
+            string(1) "l"
+          }
+          
+  Example #7 Accessing array elements
+  
+  Input
+  
+    <?php
+    $array = array(
+        "foo" => "bar",
+        42    => 24,
+        "multi" => array(
+             "dimensional" => array(
+                 "array" => "foo"
+             )
+        )
+    );
+
+    var_dump($array["foo"]);
+    var_dump($array[42]);
+    var_dump($array["multi"]["dimensional"]["array"]);
+    ?>
+    
+  Output
+  
+    string(3) "bar"
+    int(24)
+    string(3) "foo"
+    
+  Array destructuring
+  
+  Arrays can be destructured using the [] (as of PHP 7.1.0) or list() language constructs. These constructs can be used to destructure an array into distinct        variables.
+ 
+  <?php
+  $source_array = ['foo', 'bar', 'baz'];
+
+  [$foo, $bar, $baz] = $source_array;
+
+  echo $foo;    // prints "foo"
+  echo $bar;    // prints "bar"
+  echo $baz;    // prints "baz"
+  ?>
+  
+  Array destructuring can be used in foreach to destructure a multi-dimensional array while iterating over it.
+  
+  <?php
+  $source_array = [
+      [1, 'John'],
+      [2, 'Jane'],
+  ];
+
+  foreach ($source_array as [$id, $name]) {
+      // logic here with $id and $name
+  }
+  ?>
+  
+  
       
   *iterables
   Iterable is a pseudo-type introduced in PHP 7.1. It accepts any array or object implementing the Traversable interface.
@@ -452,3 +550,7 @@ Basic syntaxis
   bool(false)
   bool(false)
   bool(true)
+  
+  
+  
+  
