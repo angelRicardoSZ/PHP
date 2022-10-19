@@ -1100,6 +1100,207 @@ It is important to understand how the switch statement is executed in order to a
   // Prints "B"
   ?>
   
+  **  While **
+  
+  while loops are the simplest type of loop in PHP. They behave just like their C counterparts. The basic form of a while statement is:
+  
+  Syntax
+  
+    while (expr)
+    statement
+    
+  
+  Example #1
+  
+  <?php
+  
+  /*  curly braces*/  
+
+  $i = 1;
+  while ($i <= 10) {
+      echo $i++;  
+  }
+
+ 
+  /* while - endwhile */
+
+  $i = 1;
+  while ($i <= 10):
+      echo $i;
+      $i++;
+  endwhile;
+  ?>
+  
+  ** Do while **
+  
+  The main difference from regular while loops is that the first iteration of a do-while loop is guaranteed to run (the truth expression is only checked at the end of the iteration), whereas it may not necessarily run with a regular while loop (the truth expression is checked at the beginning of each iteration, if it evaluates to false right from the beginning, the loop execution would end immediately).
+  
+  <?php
+  $i = 0;
+  do {
+      echo $i;
+  } while ($i > 0);
+  ?>
+  
+  The above loop would run one time exactly, since after the first iteration, when truth expression is checked, it evaluates to false ($i is not bigger than 0) and the loop execution ends.
   
   
+  ** for **
   
+  for loops are the most complex loops in PHP.
+  
+  Syntax
+  
+  for (expr1; expr2; expr3)
+    statement
+    
+  The first expression (expr1) is evaluated (executed) once unconditionally at the beginning of the loop.
+
+  In the beginning of each iteration, expr2 is evaluated. If it evaluates to true, the loop continues and the nested statement(s) are executed. If it evaluates to false, the execution of the loop ends.
+
+  At the end of each iteration, expr3 is evaluated (executed)
+  
+  Example #1
+  
+    Input
+
+      for ($i = 1; $i <= 10; $i++) {
+        echo $i;
+        echo "\n";
+      }
+
+    Output
+
+      1
+      2
+      3
+      4
+      5
+      6
+      7
+      8
+      9
+      10
+  
+  Example #2
+  
+    Input
+    
+    for ($i = 1; ; $i++) {
+    if ($i > 10) {
+        break;
+      }
+      echo $i;
+      echo "\n";
+    }
+    
+    Output
+      
+      1
+      2
+      3
+      4
+      5
+      6
+      7
+      8
+      9
+      10
+      
+  Example #3
+  
+    Input
+    
+    $i = 1;
+    for (; ; ) {
+        if ($i > 10) {
+            break;
+        }
+        echo $i;
+        echo "\n";
+        $i++;
+    }
+    
+    Output
+    
+      1
+      2
+      3
+      4
+      5
+      6
+      7
+      8
+      9
+      10
+      
+   Example #4
+   
+   Input
+   
+    for ($i = 1, $j = 0; $i <= 10; $j += $i,  print "$j \n", $i++);
+    
+   Output
+   
+    1 
+    3
+    6
+    10
+    15
+    21
+    28
+    36
+    45
+    55
+    
+    Example #5
+    
+    Input
+    
+      $people = array(
+      array('name' => 'Kalle', 'salt' => 856412),
+      array('name' => 'Pierre', 'salt' => 215863)
+      );
+
+      for($i = 0; $i < count($people); ++$i) {
+          $people[$i]['salt'] = mt_rand(000000, 999999);
+      }
+      var_dump($people);
+    
+    Output
+    
+      array(2) {
+          [0]=>
+          array(2) {
+            ["name"]=>        
+            string(5) "Kalle" 
+            ["salt"]=>        
+            int(992458)       
+          }
+          [1]=>
+          array(2) {
+            ["name"]=>        
+            string(6) "Pierre"
+            ["salt"]=>        
+            int(437103)
+          }
+        }
+        
+    **  foreach **
+    
+    The foreach construct provides an easy way to iterate over arrays. foreach works only on arrays and objects, and will issue an error when you try to use it on a variable with a different data type or an uninitialized variable. There are two syntaxes:
+
+      foreach (iterable_expression as $value)
+        statement
+      foreach (iterable_expression as $key => $value)
+        statement
+    
+    The first form traverses the iterable given by iterable_expression. On each iteration, the value of the current element is assigned to $value.
+
+    The second form will additionally assign the current element's key to the $key variable on each iteration.
+    
+    
+    
+    
+    
+      
