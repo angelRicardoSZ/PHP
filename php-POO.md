@@ -259,8 +259,156 @@ As of PHP 8.0.0, properties and methods may also be accessed with the "nullsafe"
   
   Class member variables are called properties. They may be referred to using other terms such as fields, but for the purposes of this reference properties will be used. They are defined by using at least one modifier (such as Visibility, Static Keyword, or, as of PHP 8.1.0, readonly), optionally (except for readonly properties), as of PHP 7.4, followed by a type declaration, followed by a normal variable declaration. This declaration may include an initialization, but this initialization must be a constant value.
   
+  
   Within class methods non-static properties may be accessed by using -> (Object Operator): $this->property (where property is the name of the property). Static properties are accessed by using the :: (Double Colon): self::$property
   
+  The pseudo-variable $this is available inside any class method when that method is called from within an object context. $this is the value of the calling object.
+  
+  Example #1 Property declarations
+
+      <?php
+    class SimpleClass
+    {
+       public $var1 = 'hello ' . 'world';
+       public $var2 = <<<EOD
+    hello world
+    EOD;
+       public $var3 = 1+2;
+       // invalid property declarations:
+       public $var4 = self::myStaticMethod();
+       public $var5 = $myVar;
+
+       // valid property declarations:
+       public $var6 = myConstant;
+       public $var7 = [true, false];
+
+       public $var8 = <<<'EOD'
+    hello world
+    EOD;
+
+       // Without visibility modifier:
+       static $var9;
+       readonly int $var10;
+    }
+    ?>
+    
+   Type declarations
+   
+   Example #2 Example of typed properties
+   
+   <?php
+
+    class User
+    {
+        public int $id;
+        public ?string $name;
+
+        public function __construct(int $id, ?string $name)
+        {
+            $this->id = $id;
+            $this->name = $name;
+        }
+    }
+
+    $user = new User(1234, null);
+
+    var_dump($user->id);
+    var_dump($user->name);
+
+    ?>
+    
+    output
+    
+    int(1234)
+    NULL
+    
+    
+    Example #3 Accessing properties
+    
+    <?php
+
+    class Shape
+    {
+        public int $numberOfSides;
+        public string $name;
+
+        public function setNumberOfSides(int $numberOfSides): void
+        {
+            $this->numberOfSides = $numberOfSides;
+        }
+
+        public function setName(string $name): void
+        {
+            $this->name = $name;
+        }
+
+        public function getNumberOfSides(): int
+        {
+            return $this->numberOfSides;
+        }
+
+        public function getName(): string
+        {
+            return $this->name;
+        }
+    }
+
+    $triangle = new Shape();
+    $triangle->setName("triangle");
+    $triangle->setNumberofSides(3);
+    var_dump($triangle->getName());
+    var_dump($triangle->getNumberOfSides());
+
+    $circle = new Shape();
+    $circle->setName("circle");
+    var_dump($circle->getName());
+    var_dump($circle->getNumberOfSides());
+    ?>
+    
+    output
+    
+    string(8) "triangle"
+    int(3)
+    string(6) "circle"
+
+    Fatal error: Uncaught Error: Typed property Shape::$numberOfSides must not be accessed before initialization
+    
+    --Readonly properties
+    
+    
+    Example #4 Example of readonly properties
+    
+    <?php
+
+    class Test {
+       public readonly string $prop;
+
+       public function __construct(string $prop) {
+           // Legal initialization.
+           $this->prop = $prop;
+       }
+    }
+
+    $test = new Test("foobar");
+    // Legal read.
+    var_dump($test->prop); // string(6) "foobar"
+
+    // Illegal reassignment. It does not matter that the assigned value is the same.
+    $test->prop = "foobar";
+    // Error: Cannot modify readonly property Test::$prop
+    ?>
+    
+    
+    
+    
+  --Static Keyword
+  
+  Declaring class properties or methods as static makes them accessible without needing an instantiation of the class. These can also be accessed statically within an instantiated class object.
+  
+  ----static methods
+  
+  Because static methods are callable without an instance of the object created, the pseudo-variable $this is not available inside methods declared as static
+    
   Example #1 Static method example 
    
     <?php
@@ -279,9 +427,9 @@ As of PHP 8.0.0, properties and methods may also be accessed with the "nullsafe"
     
     test
     test
-    
-    Static properties 
-    
+  
+  ----static properties
+        
     Static properties are accessed using the Scope Resolution Operator (::) and cannot be accessed through the object operator (->).
 
     It's possible to reference the class using a variable. The variable's value cannot be a keyword (e.g. self, parent and static).
@@ -326,5 +474,5 @@ As of PHP 8.0.0, properties and methods may also be accessed with the "nullsafe"
     print $classname::$my_static . "\n";
     output: foo
       
-      
+    
     
