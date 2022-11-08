@@ -255,6 +255,76 @@ As of PHP 8.0.0, properties and methods may also be accessed with the "nullsafe"
 
   
   
+  -------- properties --------
+  
+  Class member variables are called properties. They may be referred to using other terms such as fields, but for the purposes of this reference properties will be used. They are defined by using at least one modifier (such as Visibility, Static Keyword, or, as of PHP 8.1.0, readonly), optionally (except for readonly properties), as of PHP 7.4, followed by a type declaration, followed by a normal variable declaration. This declaration may include an initialization, but this initialization must be a constant value.
+  
+  Within class methods non-static properties may be accessed by using -> (Object Operator): $this->property (where property is the name of the property). Static properties are accessed by using the :: (Double Colon): self::$property
+  
+  Example #1 Static method example 
+   
+    <?php
+    class Foo {
+        public static function aStaticMethod() {
+            echo "test";
+        }
+    }
+
+    Foo::aStaticMethod();
+    $classname = 'Foo';
+    $classname::aStaticMethod();
+    ?>
+    
+    output
+    
+    test
+    test
+    
+    Static properties 
+    
+    Static properties are accessed using the Scope Resolution Operator (::) and cannot be accessed through the object operator (->).
+
+    It's possible to reference the class using a variable. The variable's value cannot be a keyword (e.g. self, parent and static).
+    
+    Example #2 Static property example
+    
+    <?php
+        class Foo
+        {
+            public static $my_static = 'foo';
+
+            public function staticValue() {
+                return self::$my_static;
+            }
+        }
+
+        class Bar extends Foo
+        {
+            public function fooStatic() {
+                return parent::$my_static;
+            }
+        }
+
+    <?
+    
+    print Foo::$my_static . "\n";    
+    output: foo
+    
+    $foo = new Foo();
+    
+    print $foo->staticValue() . "\n";
+    output: foo
+    
+    print $foo->my_static . "\n";     
+    output:  Undefined "Property" my_static 
+    
+    
+    print $foo::$my_static . "\n";  
+    output: foo
+    
+    $classname = 'Foo';
+    print $classname::$my_static . "\n";
+    output: foo
       
       
     
