@@ -230,6 +230,28 @@ output
 
 Fatal error: Declaration of Extend::foo(int $a) must be compatible with Base::foo(int $a = 5) in /in/qJXVC on line 13
 
+---------------------- Nullsafe methods and properties  ----------------------
+
+As of PHP 8.0.0, properties and methods may also be accessed with the "nullsafe" operator instead: ?->. The nullsafe operator works the same as property or method access as above, except that if the object being dereferenced is null then null will be returned rather than an exception thrown. If the dereference is part of a chain, the rest of the chain is skipped.
+
+    <?php
+
+    // As of PHP 8.0.0, this line:
+    $result = $repository?->getUser(5)?->name;
+
+    // Is equivalent to the following code block:
+    if (is_null($repository)) {
+        $result = null;
+    } else {
+        $user = $repository->getUser(5);
+        if (is_null($user)) {
+            $result = null;
+        } else {
+            $result = $user->name;
+        }
+    }
+    ?>
+
 
   
   
