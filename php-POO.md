@@ -147,7 +147,7 @@ Reference:
       Signature compatibility rules
       When overriding a method, its signature must be compatible with the parent method. Otherwise, a fatal error is emitted, or, prior to PHP 8.0.0, an E_WARNING         level error is generated. A signature is compatible if it respects the variance rules, makes a mandatory parameter optional, and if any new parameters are           optional. This is known as the Liskov Substitution Principle, or LSP for short. The constructor, and private methods are exempt from these signature        compatibility rules, and thus won't emit a fatal error in case of a signature mismatch.
       
-      Example #11 Compatible child methods
+      ** Example #11 Compatible child methods
       
       <?php
 
@@ -183,6 +183,56 @@ $extended2->foo(1);
   
   Valid
   Valid
+  
+  ** Example #12 Fatal error when a child method removes a parameter
+  
+  <?php
+
+    class Base
+    {
+        public function foo(int $a = 5) {
+            echo "Valid\n";
+        }
+    }
+
+    class Extend extends Base
+    {
+        function foo()
+        {
+            parent::foo(1);
+        }
+    }
+
+    output
+
+    Fatal error: Declaration of Extend::foo() must be compatible with Base::foo(int $a = 5) in /in/evtlq on line 13
+
+    ** Example #13 Fatal error when a child method makes an optional parameter mandatory
+    
+        <?php
+
+    class Base
+    {
+        public function foo(int $a = 5) {
+            echo "Valid\n";
+        }
+    }
+
+    class Extend extends Base
+    {
+        function foo(int $a)
+        {
+            parent::foo($a);
+        }
+    }
+
+output
+
+Fatal error: Declaration of Extend::foo(int $a) must be compatible with Base::foo(int $a = 5) in /in/qJXVC on line 13
+
+
+  
+  
       
       
     
